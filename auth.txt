@@ -1,4 +1,0 @@
-DEBIAN 11 
-ip : 152.228.162.128
-user : debian 
-passwd : bkzBtS2*****Y9H97
