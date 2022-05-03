@@ -1,6 +1,4 @@
-import socket
-import time
-import os 
+import nmap
 
 print("""       .__              
 ______ |__| ____  ____  
@@ -8,43 +6,22 @@ ______ |__| ____  ____
 |  |_> >  \  \__(  <_> )
 |   __/|__|\___  >____/ 
 |__|           \/       """)
-  
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-  
-target = input('Enter the host to be scanned: ') 
-  
-target_ip = socket.gethostbyname(target) 
-print('Scanning', target_ip) 
-  
-  
-  
-def port_scan(port): 
-    try: 
-        s.connect((target_ip, port)) 
-        return True
-    except: 
-        return False
-  
-  
-start = time.time() 
 
-for port in range(20, 25): 
-    if port_scan(port): 
-        print(f'port {port} is open') 
-    else: 
-        print(f'port {port} is closed') 
-        
-for port in range(53, 80): 
-    if port_scan(port): 
-        print(f'port {port} is open') 
-    else: 
-        print(f'port {port} is closed')
-  
-for port in range(443, 444): 
-    if port_scan(port): 
-        print(f'port {port} is open') 
-    else: 
-        print(f'port {port} is closed')  
-  
-end = time.time() 
-print(f'Time taken {end-start:.2f} seconds')
+# initialize the port scanner
+nmScan = nmap.PortScanner()
+
+# scan localhost for ports in range 21-443
+nmScan.scan('127.0.0.1', '21-443')
+
+# run a loop to print all the found result about the ports
+for host in nmScan.all_hosts():
+     print('Host : %s (%s)' % (host, nmScan[host].hostname()))
+     print('State : %s' % nmScan[host].state())
+     for proto in nmScan[host].all_protocols():
+         print('----------')
+         print('Protocol : %s' % proto)
+ 
+         lport = nmScan[host][proto].keys()
+         lport.sort()
+         for port in lport:
+             print ('port : %s\tstate : %s' % (port, nmScan[host][proto][port]['state'])
