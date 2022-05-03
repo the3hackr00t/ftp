@@ -1,4 +1,5 @@
 import socket
+import time
 
 print("""       .__              
 ______ |__| ____  ____  
@@ -6,25 +7,31 @@ ______ |__| ____  ____
 |  |_> >  \  \__(  <_> )
 |   __/|__|\___  >____/ 
 |__|           \/       """)
-
-import socket
-
-t_host = input("Enter the host to be scanned: ")   # Target Host, www.example.com
-t_ip = socket.gethostbyname(t_host)     # Resolve t_host to IPv4 address
-print("Scanning ", t_ip)
-
-while 1:
-
-	t_port = input("Enter the port: ")	
-
-	try:
-		sock = socket.socket()			
-		res = sock.connect((t_ip, t_port))
-		print("Port {}: Open" .format(t_port))
-		sock.close
-
-	except:
-		print("Port {}: Closed" .format(t_port))
-
-	
-print("Port Scanning complete")
+  
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+  
+target = input('Enter the host to be scanned: ') 
+  
+target_ip = socket.gethostbyname(target) 
+print('Scanning', target_ip) 
+  
+  
+  
+def port_scan(port): 
+    try: 
+        s.connect((target_ip, port)) 
+        return True
+    except: 
+        return False
+  
+  
+start = time.time() 
+  
+for port in range(5): 
+    if port_scan(port): 
+        print(f'port {port} is open') 
+    else: 
+        print(f'port {port} is closed') 
+  
+end = time.time() 
+print(f'Time taken {end-start:.2f} seconds')
